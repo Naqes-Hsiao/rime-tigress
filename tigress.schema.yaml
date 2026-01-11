@@ -1,0 +1,93 @@
+# Rime schema for Tigress
+# encoding: utf-8
+
+schema:
+  name: 虎码
+  schema_id: tigress
+  author:
+    - Nobody
+  description: |
+    Rime schema for Tigress
+
+switches:
+    - name: ascii_mode
+      reset: 0
+      states: [ zh, en ]
+    - name: simplification
+      reset: 0
+      states: [ simp, trad ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - affix_segmentor@reverse_lookup
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - punct_translator
+    - table_translator
+    - script_translator@pinyin_lookup
+  filters:
+    - simplifier
+    - uniquifier
+    - reverse_lookup_filter@pinyin_reverse_lookup
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "^P[a-z]*"
+
+key_binder:
+  import_preset: default
+  bindings:
+    - {accept: semicolon, send: 2, when: has_menu}
+    - {accept: apostrophe, send: 3, when: has_menu}
+
+speller:
+  max_code_length: 4
+  auto_select: true
+
+punctuator:
+  import_preset: default
+
+# segmentor
+reverse_lookup:
+  tag: reverse_lookup
+  prefix: "P"
+  tips: "【反查】"
+
+translator:
+  dictionary: tigress
+  enable_charset_filter: true
+  enable_encoder: false
+  enable_completion: true
+
+# translator
+pinyin_lookup:
+  tag: reverse_lookup
+  dictionary: pinyin_simp
+  enable_charset_filter: true
+  preedit_format:
+    - "xform/([nl])v/$1ü/"
+    - "xform/([nl])ue/$1üe/"
+    - "xform/([jqxy])v/$1u/"
+
+simplifier:
+  opencc_config: s2hk.json
+
+# filter
+pinyin_reverse_lookup:
+  tags: [ reverse_lookup ]
+  overwrite_comment: true
+  dictionary: tigress

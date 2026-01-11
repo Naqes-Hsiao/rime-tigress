@@ -2,9 +2,8 @@
 # encoding: utf-8
 
 schema:
-  schema_id: pinyin_simp
   name: 全拼
-  version: 0.1
+  schema_id: pinyin_simp
   author:
     - 佚名
   description: |
